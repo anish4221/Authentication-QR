@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Secure Form Access (IP + Password)</title>
+</head>
+<body>
+  <h2>Enter Password to Access the Feedback Form</h2>
+  <input type="password" id="password" placeholder="Enter password" />
+  <button onclick="checkAccess()">Unlock Form</button>
+
+  <script>
+    function checkAccess() {
+      const correctPassword = "1234";
+      const password = document.getElementById("password").value.trim();
+
+      if (password !== correctPassword) {
+        alert("Incorrect password.");
+        return;
+      }
+
+      fetch("https://api.ipify.org?format=json")
+        .then(response => response.json())
+        .then(data => {
+          const userIP = data.ip;
+          const allowedIP = "103.119.167.52"; // 👈 Your updated IP here
+          
+          if (userIP === allowedIP) {
+            // ✅ Redirect to your Google Form
+            window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSf32P5zqx8g1SfnvVx60GuCwcvVmmM7maan1TpUYCb_XM2vxA/viewform?usp=header";
+          } else {
+            alert("Access denied: IP mismatch.");
+          }
+        })
+        .catch(() => {
+          alert("Failed to fetch IP.");
+        });
+    }
+  </script>
+</body>
+</html>
